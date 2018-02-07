@@ -3,7 +3,13 @@ var router = express.Router();
 var client = require('../lib/redisclient');
 var moment = require('moment');
 
-/* GET home page. */
+router.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3332");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
+
 router.get('/', function(req, res, next) {
   async function getData() {
     let timestamps = await client.smembers('timestamps');
@@ -16,12 +22,8 @@ router.get('/', function(req, res, next) {
   }
   getData()
     .then((data) => {
-      res.render('index', {
-        title: 'Express',
-        data: JSON.stringify(data),
-      });
+      res.send(data)
     });
-
 });
 
 module.exports = router;
