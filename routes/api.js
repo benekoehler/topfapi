@@ -23,7 +23,8 @@ router.get('/', function(req, res, next) {
   getData()
     .then((data) => {
       res.send(data)
-    });
+    })
+    .catch((e) => console.log(e));
 });
 
 module.exports = router;
