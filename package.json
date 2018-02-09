@@ -4,7 +4,8 @@
   "author": "George Danzer",
   "license": "MIT",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "staging": "NODE_ENV=staging PORT=62000 node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
