@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# These environment variables are sometimes needed by the running daemons
+export USER=bluetopf
+export HOME=/home/bluetopf
+
+# Include the user-specific profile
+source $HOME/.bash_profile
+
+# Now let's go!
+exec /package/host/localhost/nodejs-9/bin/npm run staging --prefix /home/bluetopf/topfapi 2>&1
