@@ -20,6 +20,7 @@ router.get('/', function(req, res, next) {
     let moist1Array = [];
     let moist2Array = [];
     let lightArray = [];
+    let ledArray = [];
 
     for (let timestamp of timestamps) {
       let temp = await client.get('temp:' + timestamp);
@@ -27,12 +28,16 @@ router.get('/', function(req, res, next) {
       let moist1 = await client.get('moist1:' + timestamp);
       let moist2 = await client.get('moist2:' + timestamp);
       let light = await client.get('light:' + timestamp);
+      let led = await client.get('ledsOn:' + timestamp);
       tempArray.push({ [timestamp]: temp });
       humArray.push({ [timestamp]: hum });
       moist1Array.push({ [timestamp]: moist1 });
       moist2Array.push({ [timestamp]: moist2 });
       lightArray.push({ [timestamp]: light });
+      ledArray.push({ [timestamp]: led });
     }
+
+
     return [
             {
               "type": "temp",
@@ -53,6 +58,10 @@ router.get('/', function(req, res, next) {
             {
               "type": "light",
               "value": lightArray
+            },
+            {
+              "type": "ledOn",
+              "value": ledArray
             }
           ];
   };

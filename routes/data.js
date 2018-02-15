@@ -6,13 +6,17 @@ var moment = require('moment');
 const config = require('../config.js').get(process.env.NODE_ENV);
 
 router.post('/', function(req, res, next) {
+  function toggleLights(amUp=5, amDown=6, pmUp=19, pmDown=22){
+    let currentTime = moment().format("H");
+    return (currentTime >= pmUp && currentTime <= pmDown) || ( currentTime >= amUp && currentTime <= amDown);
+  }
+  const timestamp = moment().unix();
   const data = req.body
   try {
     const token = req.body.token
     if (token === config.token) {
       Object.keys(data).forEach(function (key) {
         if (key !== "token") {
-          const timestamp = moment().unix();
           let value = data[key];
           client.sadd('timestamps', timestamp)
             .then(() => {})
@@ -22,9 +26,12 @@ router.post('/', function(req, res, next) {
             .catch((e) => console.log(e));
         }
       });
-      res.send('data arrived')
+      client.set('ledsOn:' + timestamp, toggleLights())
+      console.log(toggleLights());
+      res.send(`{"data Arrived" : true,\n"ledOn": ${toggleLights()}}`
+        )
     } else {
-      res.send('wrong token')
+      res.send('{"data Arrived": false }')
     }
   } catch(error) {
     res.send(error);
