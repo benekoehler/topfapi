@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const basicAuth = require('express-basic-auth');
+const config = require('./config.js').get(process.env.NODE_ENV);
+
 
 var data = require('./routes/data');
 var api = require('./routes/api');
@@ -23,8 +25,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+console.log(config.users);
 app.use(basicAuth({
-    users: { 'admin': 'supersecret' }
+    users: config.users
 }))
 
 app.use('/data', data);

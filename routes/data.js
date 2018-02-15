@@ -12,27 +12,21 @@ router.post('/', function(req, res, next) {
   }
   const timestamp = moment().unix();
   const data = req.body
+
   try {
-    const token = req.body.token
-    if (token === config.token) {
-      Object.keys(data).forEach(function (key) {
-        if (key !== "token") {
-          let value = data[key];
-          client.sadd('timestamps', timestamp)
-            .then(() => {})
-            .catch((e) => console.log(e));
-          client.set(key + ':' + timestamp, value)
-            .then(() => {})
-            .catch((e) => console.log(e));
-        }
-      });
-      client.set('ledsOn:' + timestamp, toggleLights())
-      console.log(toggleLights());
-      res.send(`{"data Arrived" : true,\n"ledOn": ${toggleLights()}}`
-        )
-    } else {
-      res.send('{"data Arrived": false }')
-    }
+    Object.keys(data).forEach(function (key) {
+      let value = data[key];
+      client.sadd('timestamps', timestamp)
+        .then(() => {})
+        .catch((e) => console.log(e));
+      client.set(key + ':' + timestamp, value)
+        .then(() => {})
+        .catch((e) => console.log(e));
+    });
+    client.set('ledsOn:' + timestamp, toggleLights())
+
+    res.send(`{"data Arrived" : true,\n"ledOn": ${toggleLights()}}`)
+
   } catch(error) {
     res.send(error);
   }
