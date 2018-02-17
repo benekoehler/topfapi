@@ -15,6 +15,7 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res, next) {
   async function getData() {
     let timestamps = await client.smembers('timestamps');
+    console.log(timestamps.length);
     let tempArray = [];
     let humArray = [];
     let moist1Array = [];

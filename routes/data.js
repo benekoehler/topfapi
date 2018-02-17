@@ -5,17 +5,17 @@ var moment = require('moment');
 
 const config = require('../config.js').get(process.env.NODE_ENV);
 
+function toggleLights(amUp=5, amDown=6, pmUp=19, pmDown=22){
+  let currentTime = moment().format("H");
+  return (currentTime >= pmUp && currentTime <= pmDown) || ( currentTime >= amUp && currentTime <= amDown);
+}
 router.post('/', function(req, res, next) {
-  function toggleLights(amUp=5, amDown=6, pmUp=19, pmDown=22){
-    let currentTime = moment().format("H");
-    return (currentTime >= pmUp && currentTime <= pmDown) || ( currentTime >= amUp && currentTime <= amDown);
-  }
   const timestamp = moment().unix();
-  const data = req.body
-
+  const data = req.body;
   try {
     Object.keys(data).forEach(function (key) {
       let value = data[key];
+      console.log(key, value, timestamp);
       client.sadd('timestamps', timestamp)
         .then(() => {})
         .catch((e) => console.log(e));
